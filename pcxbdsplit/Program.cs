@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace pcxbdsplit
 {
@@ -120,14 +121,14 @@ namespace pcxbdsplit
                     }
                 }
 
+                string outputDir = Path.Combine(outputDirectory, Path.GetFileName(inputFile));
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
                 foreach (PCXBDEntry entry in pcXbd.PCXBDEntries)
                 {
-                    string outputDir = Path.Combine(outputDirectory, Path.GetFileName(inputFile));
-                    if (!Directory.Exists(outputDir))
-                    {
-                        Directory.CreateDirectory(outputDir);
-                    }
-
                     string extension = "";
 
                     if (entry.EntryType == "DXT5")
@@ -148,10 +149,18 @@ namespace pcxbdsplit
                     //    return false;
                     //}
 
-                    Console.WriteLine("  Writing content data to {0}", writeFile);
+                    Console.Write("  Writing content data to {0}", writeFile);
                     File.WriteAllBytes(writeFile, entry.Content);
                     Console.WriteLine("    OK");
 
+                }
+
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(PCXBD));
+
+                using (FileStream fileStream = new FileStream(Path.Combine(outputDir, Path.GetFileName(inputFile)) + ".xml", FileMode.Create))
+                {
+                    xmlSerializer.Serialize(fileStream, pcXbd);
+                    fileStream.Close();
                 }
 
             }

@@ -93,7 +93,7 @@ namespace xbdjoin
                     b.Write(type);
 
                     byte[] content = File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(inputFile), chunk.FileName));
-                    //write chunk lentgh
+                    //write chunk length
                     b.Write(content.Length);
 
                     //write chunk
