@@ -135,59 +135,31 @@ namespace xbdsplit
 
                 //write the header file
                 string headerFile = Path.Combine(outputDirectory, Path.GetFileName(inputFile)) + ".xml";
-                //using (XmlTextWriter xmlTextWriter = new XmlTextWriter(headerFile, Encoding.UTF8))
-                //{
-                    //xmlTextWriter.Formatting = Formatting.Indented;
-                    //xmlTextWriter.WriteStartDocument();
-                    //xmlTextWriter.WriteStartElement("XBD");
+                //write the data out
+                foreach (XBDChunk chunk in xbd.Chunks)
+                {
+                    //xmlTextWriter.WriteStartElement("Chunk");
+                    string writeFile = Path.Combine(outputDirectory, Path.GetFileName(inputFile) + "_" + chunk.ChunkType);
+                    chunk.FileName = Path.GetFileName(writeFile);
 
-                    //xmlTextWriter.WriteStartElement("Version");
-                    //xmlTextWriter.WriteValue(xbd.Version);
-                    //xmlTextWriter.WriteEndElement();
+                    //if (File.Exists(writeFile))
+                    //{
+                    //    Console.WriteLine("File to write to {0} already exists!!!", writeFile);
+                    //    return false;
+                    //}
 
-                    //xmlTextWriter.WriteStartElement("NumberOfChunks");
-                    //xmlTextWriter.WriteValue(xbd.NumberOfChunks);
-                    //xmlTextWriter.WriteEndElement();
+                    Console.WriteLine("  Writing chunk data to {0}", writeFile);
+                    File.WriteAllBytes(writeFile, chunk.Content);
+                    Console.WriteLine("    OK");
 
-                    //xmlTextWriter.WriteStartElement("Chunks");
-                    //write the data out
-                    foreach (XBDChunk chunk in xbd.Chunks)
-                    {
-                        //xmlTextWriter.WriteStartElement("Chunk");
-                        string writeFile = Path.Combine(outputDirectory, Path.GetFileName(inputFile) + "_" + chunk.ChunkType);
-                        chunk.FileName = Path.GetFileName(writeFile);
-                        
-                        //xmlTextWriter.WriteStartElement("FileName");
-                        //xmlTextWriter.WriteString(chunk.FileName);
-                        //xmlTextWriter.WriteEndElement();
+                }
 
-                        //xmlTextWriter.WriteStartElement("OriginalLength");
-                        //xmlTextWriter.WriteValue(chunk.Length);
-                        //xmlTextWriter.WriteEndElement();
-
-                        //if (File.Exists(writeFile))
-                        //{
-                        //    Console.WriteLine("File to write to {0} already exists!!!", writeFile);
-                        //    return false;
-                        //}
-
-                        Console.WriteLine("  Writing chunk data to {0}", writeFile);
-                        File.WriteAllBytes(writeFile, chunk.Content);
-                        Console.WriteLine("    OK");
-                        //xmlTextWriter.WriteEndElement();
-                    }
-                    //xmlTextWriter.WriteEndElement();
-
-                    //xmlTextWriter.WriteEndElement();
-                    //xmlTextWriter.WriteEndDocument();
-
-                    XmlSerializer xmlSerializer = new XmlSerializer(typeof(XBD));
-                    using (FileStream fileStream = new FileStream(headerFile, FileMode.OpenOrCreate))
-                    {
-                        xmlSerializer.Serialize(fileStream, xbd);
-                        fileStream.Close();
-                    }
-                //}
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(XBD));
+                using (FileStream fileStream = new FileStream(headerFile, FileMode.OpenOrCreate))
+                {
+                    xmlSerializer.Serialize(fileStream, xbd);
+                    fileStream.Close();
+                }
 
             }
             catch (Exception ex)
