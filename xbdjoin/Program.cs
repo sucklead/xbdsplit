@@ -51,7 +51,7 @@ namespace xbdjoin
             }
             else
             {
-                string[] files = Directory.GetFiles(".", "*.xbd.xml");
+                string[] files = Directory.GetFiles(".", "*.xbd.xml", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                     Console.WriteLine("Processing file {0}", file);
@@ -92,7 +92,7 @@ namespace xbdjoin
                     Array.Reverse(type);
                     b.Write(type);
 
-                    byte[] content = File.ReadAllBytes(chunk.FileName);
+                    byte[] content = File.ReadAllBytes(Path.Combine(Path.GetDirectoryName(inputFile), chunk.FileName));
                     //write chunk lentgh
                     b.Write(content.Length);
 

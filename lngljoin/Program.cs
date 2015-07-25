@@ -25,7 +25,7 @@ namespace lngljoin
             string inputFile = args[0];
             string outputDir = args[1];
 
-            inputFile = @"01_HOUSE.xbd_LNGL.xml";
+            //inputFile = @"01_HOUSE.xbd_LNGL.xml";
 
             if (inputFile != "*"
                 && !File.Exists(inputFile))
@@ -51,7 +51,7 @@ namespace lngljoin
             }
             else
             {
-                string[] files = Directory.GetFiles(".", "*_LNGL.xml");
+                string[] files = Directory.GetFiles(".", "*_LNGL.xml", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                     Console.WriteLine("Processing file {0}", file);
@@ -79,7 +79,13 @@ namespace lngljoin
                 fileStream.Close();
             }
 
-            string outputFile = Path.Combine(outputDir, Path.GetFileName(inputFile).Replace(".xml", ""));
+            string outDir = Path.Combine(outputDir, Path.GetDirectoryName(inputFile));
+            if (!Directory.Exists(outDir))
+            {
+                Directory.CreateDirectory(outDir);
+            }
+
+            string outputFile = Path.Combine(outDir, Path.GetFileName(inputFile).Replace(".xml", ""));
 
             using (BinaryWriter b = new BinaryWriter(File.Open(outputFile, FileMode.Create, FileAccess.Write, FileShare.None)))
             {

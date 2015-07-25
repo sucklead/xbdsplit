@@ -24,7 +24,7 @@ namespace lngsplit
             string inputFile = args[0];
             string outputDir = args[1];
 
-            inputFile = @"C:\temp\splitxbd\MISC03_ASYLUM_CUTSCENE.xbd_LNGL";
+            //inputFile = @"C:\temp\splitxbd\MISC03_ASYLUM_CUTSCENE.xbd_LNGL";
             //inputFile = @"09_REEF.xbd_LNGL";
             //inputFile = @"06_REFINERY_PT1.xbd_LNGL";
             //inputFile = @"02_STREETS_ONE_PT1.xbd_LNGL";
@@ -55,7 +55,7 @@ namespace lngsplit
             }
             else
             {
-                string[] files = Directory.GetFiles(".", "*.xbd_LNG?");
+                string[] files = Directory.GetFiles(".", "*.xbd_LNG?", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                     Console.WriteLine(new string('-', 32));

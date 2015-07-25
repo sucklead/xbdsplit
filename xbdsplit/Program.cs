@@ -133,13 +133,25 @@ namespace xbdsplit
                     }
                 }
 
+                string fileDir = Path.Combine(outputDirectory, Path.GetFileName(inputFile));
+                if (!Directory.Exists(fileDir))
+                {
+                    Directory.CreateDirectory(fileDir);
+                }
+
+                string outputDir = fileDir; // Path.Combine(fileDir, "Chunks");
+                if (!Directory.Exists(outputDir))
+                {
+                    Directory.CreateDirectory(outputDir);
+                }
+
                 //write the header file
-                string headerFile = Path.Combine(outputDirectory, Path.GetFileName(inputFile)) + ".xml";
+                string headerFile = Path.Combine(outputDir, Path.GetFileName(inputFile)) + ".xml";
                 //write the data out
                 foreach (XBDChunk chunk in xbd.Chunks)
                 {
                     //xmlTextWriter.WriteStartElement("Chunk");
-                    string writeFile = Path.Combine(outputDirectory, Path.GetFileName(inputFile) + "_" + chunk.ChunkType);
+                    string writeFile = Path.Combine(outputDir, Path.GetFileName(inputFile) + "_" + chunk.ChunkType);
                     chunk.FileName = Path.GetFileName(writeFile);
 
                     //if (File.Exists(writeFile))
