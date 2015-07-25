@@ -68,7 +68,7 @@ namespace pcxbdsplit
             }
 
             Console.WriteLine("PC.XBD Split OK :)");
-            Console.ReadLine();
+            //Console.ReadLine();
 
             return 0;
         }

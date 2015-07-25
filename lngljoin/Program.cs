@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace lngljoin
@@ -64,7 +65,7 @@ namespace lngljoin
             }
 
             Console.WriteLine("Join OK :)");
-            Console.ReadLine();
+            //Console.ReadLine();
 
             return 0;
         }
@@ -72,11 +73,17 @@ namespace lngljoin
         private static bool ProcessFile(string inputFile, string outputDir)
         {
             LNGL lngl = null;
+
+            XmlReaderSettings readerSettings = new XmlReaderSettings();
+            readerSettings.IgnoreWhitespace = false;
+
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(LNGL));
-            using (FileStream fileStream = new FileStream(inputFile, FileMode.Open))
+
+            //using (FileStream fileStream = new FileStream(inputFile, FileMode.Open))
+            using (XmlReader xmlReader = XmlReader.Create(inputFile, readerSettings))
             {
-                lngl = xmlSerializer.Deserialize(fileStream) as LNGL;
-                fileStream.Close();
+                lngl = xmlSerializer.Deserialize(xmlReader) as LNGL;
+                xmlReader.Close();
             }
 
             string outDir = Path.Combine(outputDir, Path.GetDirectoryName(inputFile));
@@ -106,6 +113,9 @@ namespace lngljoin
                     int nextString = 0; //(int)(b.BaseStream.Position + (language.NumberOfEntries * 8));
                     foreach(Entry entry in language.Entries)
                     {
+                        //fix line endings
+                        entry.Text = entry.Text.Replace("\n", "\r\n");
+
                         b.Write(entry.Unknown);
                         b.Write(entry.TextId);
                         nextString += entry.Text.Length + 1;

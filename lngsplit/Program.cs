@@ -70,7 +70,7 @@ namespace lngsplit
             }
 
             Console.WriteLine("LNG Split OK :)");
-            Console.ReadLine();
+            //Console.ReadLine();
 
             return 0;
         }

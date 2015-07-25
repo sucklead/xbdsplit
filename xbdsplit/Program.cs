@@ -64,7 +64,7 @@ namespace xbdsplit
             }
 
             Console.WriteLine("Split OK :)");
-            Console.ReadLine();
+            //Console.ReadLine();
 
             return 0;
         }

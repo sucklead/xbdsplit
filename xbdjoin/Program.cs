@@ -64,7 +64,7 @@ namespace xbdjoin
             }
 
             Console.WriteLine("Join OK :)");
-            Console.ReadLine();
+            //Console.ReadLine();
 
             return 0;
         }
