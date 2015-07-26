@@ -27,7 +27,7 @@ namespace pcnafsplit
             //inputFile = @"09_REEF.xbd_LNGL";
             //inputFile = @"06_REFINERY_PT1.xbd_LNGL";
             //inputFile = @"02_STREETS_ONE_PT1.xbd_LNGL";
-            inputFile = @"misc03_asylum_cutscene\NifExport.pc.naf";
+            //inputFile = @"misc03_asylum_cutscene\NifExport.pc.naf";
             //inputFile = "*";
 
             if (inputFile != "*"
@@ -55,7 +55,7 @@ namespace pcnafsplit
             }
             else
             {
-                string[] files = Directory.GetFiles(".", "*.pc.xbd");
+                string[] files = Directory.GetFiles(".", "*.pc.naf", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
                     Console.WriteLine(new string('-', 32));
@@ -84,9 +84,11 @@ namespace pcnafsplit
                 pcNaf.PCNAFEntries = new List<PCNAFEntry>();
 
                 int matchCount = 0;
+                long binStart = 0;
 
                 using (BinaryReader b = new BinaryReader(File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
+                    short entries = 0;
                     while (b.BaseStream.Position < b.BaseStream.Length)
                     {
                         //PCNAFEntry entry = new PCNAFEntry();
@@ -108,6 +110,10 @@ namespace pcnafsplit
                         {
                             matchCount++;
                         }
+                        else
+                        {
+                            matchCount = 0;
+                        }
 
                         if (matchCount != 4)
                         {
@@ -119,49 +125,37 @@ namespace pcnafsplit
                         //jump back to texture length
                         b.BaseStream.Position -= 8;
 
+                        //output the previous chunk as bin
+                        PCNAFEntry binEntry = new PCNAFEntry();
+
+                        binEntry.EntryNumber = entries++;
+                        binEntry.EntryType = "bin";
+
+                        binEntry.Length = (int)(b.BaseStream.Position - binStart);
+                        b.BaseStream.Position = binStart;
+                        binEntry.Content = b.ReadBytes(binEntry.Length);
+                        Console.WriteLine("Saving bin at {0} length {1}", binStart, binEntry.Length);
+
+                        pcNaf.PCNAFEntries.Add(binEntry);
+
                         PCNAFEntry entry = new PCNAFEntry();
 
-                        //entry.EntryNumber = 
+                        entry.EntryNumber = entries++;
+                        entry.EntryType = "dds";
+
+                        entry.Length = b.ReadInt32();
+                        entry.Content = b.ReadBytes(entry.Length);
 
                         pcNaf.PCNAFEntries.Add(entry);
 
+                        binStart = b.BaseStream.Position;
+
                         matchCount = 0;
-
-                        //entry.EntryNumber = b.ReadInt16();
-                        //Console.WriteLine("Entry Number is {0}", entry.EntryNumber);
-
-                        //entry.TypeNumber = b.ReadInt32();
-
-                        //if (entry.TypeNumber == 894720068)
-                        //{
-                        //    entry.EntryType = "DXT5";
-                        //}
-                        //else
-                        //{
-                        //    entry.EntryType = string.Format("Unknown{0}", entry.TypeNumber);
-                        //}
-
-                        ////entry.EntryType = new string(b.ReadChars(4).ToArray());
-                        //Console.WriteLine(" Entry Type is {0}", entry.EntryType);
-
-                        //if (entry.EntryType == "DXT5")
-                        //{
-                        //    entry.UnknownShort1 = b.ReadInt16();
-                        //    entry.UnknownShort2 = b.ReadInt16();
-                        //    //Console.WriteLine(" UnknownShort1 {0} UnknownShort2 {1}", entry.UnknownShort1, entry.UnknownShort2);
-                        //}
-
-                        //entry.Length = b.ReadInt32();
-                        //Console.WriteLine(" Content Length {0}", entry.Length);
-
-                        //entry.Content = b.ReadBytes(entry.Length);
-                        //Console.WriteLine("(Position {0} of {1})", b.BaseStream.Position, b.BaseStream.Length);
-
-                        //pcNaf.PCNAFEntries.Add(entry);
+                       
                     }
                 }
 
-                string outputDir = Path.Combine(outputDirectory, Path.GetFileName(inputFile));
+                string outputDir = Path.Combine(outputDirectory, Path.GetDirectoryName(inputFile));
                 if (!Directory.Exists(outputDir))
                 {
                     Directory.CreateDirectory(outputDir);
@@ -171,13 +165,13 @@ namespace pcnafsplit
                 {
                     string extension = "";
 
-                    if (entry.EntryType == "DXT5")
+                    if (entry.EntryType == "dds")
                     {
                         extension = "dds";
                     }
                     else
                     {
-                        extension = "obj";
+                        extension = "bin";
                     }
 
                     string writeFile = Path.Combine(outputDir, entry.EntryType + "_" + entry.EntryNumber + "." + extension);
@@ -192,7 +186,6 @@ namespace pcnafsplit
                     Console.Write("  Writing content data to {0}", writeFile);
                     File.WriteAllBytes(writeFile, entry.Content);
                     Console.WriteLine("    OK");
-
                 }
 
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(PCNAF));
