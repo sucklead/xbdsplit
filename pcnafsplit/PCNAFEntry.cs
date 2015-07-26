@@ -4,7 +4,6 @@ namespace pcnafsplit
 {
     public class PCNAFEntry
     {
-        [XmlIgnore]
         public short EntryNumber { get; set; }
         public string EntryType { get; set; }
         [XmlIgnore]

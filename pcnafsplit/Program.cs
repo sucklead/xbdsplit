@@ -70,7 +70,7 @@ namespace pcnafsplit
             }
 
             Console.WriteLine("PC.NAF Split OK :)");
-            Console.ReadLine();
+            //Console.ReadLine();
 
             return 0;
         }
@@ -84,15 +84,12 @@ namespace pcnafsplit
                 pcNaf.PCNAFEntries = new List<PCNAFEntry>();
 
                 int matchCount = 0;
-                long binStart = 0;
+                //long binStart = 0;
 
                 using (BinaryReader b = new BinaryReader(File.Open(inputFile, FileMode.Open, FileAccess.Read, FileShare.Read)))
                 {
-                    short entries = 0;
                     while (b.BaseStream.Position < b.BaseStream.Length)
                     {
-                        //PCNAFEntry entry = new PCNAFEntry();
-
                         byte checkByte = b.ReadByte();
 
                         if (matchCount < 2
@@ -119,39 +116,38 @@ namespace pcnafsplit
                         {
                             continue;
                         }
+                        break;
+                    }
+                    //jump back to number of textures
+                    b.BaseStream.Position -= 14;
 
-                        Console.WriteLine("Found texture at {0}", b.BaseStream.Position - 4);
+                    //output the previous chunk as bin
+                    PCNAFEntry binEntry = new PCNAFEntry();
+                    binEntry.EntryType = "bin";
 
-                        //jump back to texture length
-                        b.BaseStream.Position -= 8;
+                    binEntry.EntryNumber = 0;
+                    binEntry.Length = (int)(b.BaseStream.Position);
+                    b.BaseStream.Position = 0;
+                    binEntry.Content = b.ReadBytes(binEntry.Length);
 
+                    pcNaf.PCNAFEntries.Add(binEntry);
+
+                    int numberOfTextures = b.ReadInt32();
+                    
+                    for (int i = 0; i < numberOfTextures; i++)
+                    {
                         //output the previous chunk as bin
-                        PCNAFEntry binEntry = new PCNAFEntry();
-
-                        binEntry.EntryNumber = entries++;
-                        binEntry.EntryType = "bin";
-
-                        binEntry.Length = (int)(b.BaseStream.Position - binStart);
-                        b.BaseStream.Position = binStart;
-                        binEntry.Content = b.ReadBytes(binEntry.Length);
-                        Console.WriteLine("Saving bin at {0} length {1}", binStart, binEntry.Length);
-
-                        pcNaf.PCNAFEntries.Add(binEntry);
-
                         PCNAFEntry entry = new PCNAFEntry();
-
-                        entry.EntryNumber = entries++;
                         entry.EntryType = "dds";
 
+                        entry.EntryNumber = b.ReadInt16();
                         entry.Length = b.ReadInt32();
                         entry.Content = b.ReadBytes(entry.Length);
 
                         pcNaf.PCNAFEntries.Add(entry);
 
-                        binStart = b.BaseStream.Position;
-
-                        matchCount = 0;
-                       
+                        //skip the *
+                        b.ReadByte();
                     }
                 }
 
@@ -161,20 +157,20 @@ namespace pcnafsplit
                     Directory.CreateDirectory(outputDir);
                 }
 
+
+
                 foreach (PCNAFEntry entry in pcNaf.PCNAFEntries)
                 {
-                    string extension = "";
-
+                    string writeFile = "";
                     if (entry.EntryType == "dds")
                     {
-                        extension = "dds";
+                        writeFile = Path.Combine(outputDir, "Texture_" + entry.EntryNumber.ToString("000000") + ".dds");
                     }
                     else
                     {
-                        extension = "bin";
+                        writeFile = Path.Combine(outputDir, "Unknown.bin");
                     }
 
-                    string writeFile = Path.Combine(outputDir, entry.EntryType + "_" + entry.EntryNumber + "." + extension);
                     entry.FileName = Path.GetFileName(writeFile);
 
                     //if (File.Exists(writeFile))
