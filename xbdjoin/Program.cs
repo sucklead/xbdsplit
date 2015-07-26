@@ -54,6 +54,12 @@ namespace xbdjoin
                 string[] files = Directory.GetFiles(".", "*.xbd.xml", SearchOption.AllDirectories);
                 foreach (string file in files)
                 {
+                    //don't process .pc.xbd.xml files
+                    if (file.EndsWith(".pc.xbd.xml"))
+                    {
+                        continue;
+                    }
+
                     Console.WriteLine("Processing file {0}", file);
                     if (!ProcessFile(file, outputDir))
                     {
