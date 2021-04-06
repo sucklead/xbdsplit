@@ -1,7 +1,7 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xbdsplit", "xbdsplit\xbdsplit.csproj", "{F374CD4C-0CD1-4F8F-8D40-383766496ABF}"
 EndProject
@@ -18,6 +18,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pcnafsplit", "pcnafsplit\pcnafsplit.csproj", "{23744F18-EFED-47E8-8924-20D8E8190254}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pcnafjoin", "pcnafjoin\pcnafjoin.csproj", "{475979D3-04A8-43F7-9E6D-B65D7F0345EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xbdcharsplit", "xbdcharsplit\xbdcharsplit.csproj", "{42DE33F3-212D-46D7-AF5B-4BFCABC7DCBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHalf", "TestHalf\TestHalf.csproj", "{2F19DCAC-DD52-4243-B130-1F57F95CDAC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nafsplit", "nafsplit\nafsplit.csproj", "{36A6E05E-E303-4403-AAE7-194A135CBDB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,8 +63,23 @@ Global
 		{475979D3-04A8-43F7-9E6D-B65D7F0345EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{475979D3-04A8-43F7-9E6D-B65D7F0345EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{475979D3-04A8-43F7-9E6D-B65D7F0345EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42DE33F3-212D-46D7-AF5B-4BFCABC7DCBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42DE33F3-212D-46D7-AF5B-4BFCABC7DCBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42DE33F3-212D-46D7-AF5B-4BFCABC7DCBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42DE33F3-212D-46D7-AF5B-4BFCABC7DCBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F19DCAC-DD52-4243-B130-1F57F95CDAC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F19DCAC-DD52-4243-B130-1F57F95CDAC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F19DCAC-DD52-4243-B130-1F57F95CDAC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F19DCAC-DD52-4243-B130-1F57F95CDAC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36A6E05E-E303-4403-AAE7-194A135CBDB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36A6E05E-E303-4403-AAE7-194A135CBDB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36A6E05E-E303-4403-AAE7-194A135CBDB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36A6E05E-E303-4403-AAE7-194A135CBDB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {80E86230-B100-440B-B44F-F1FBDF16A657}
 	EndGlobalSection
 EndGlobal
